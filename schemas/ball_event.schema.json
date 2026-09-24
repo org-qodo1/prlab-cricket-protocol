@@ -42,7 +42,7 @@
     "wicket": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "umpire_confirmed"],
+      "required": ["kind"],
       "properties": {
         "kind": {
           "type": "string",
@@ -50,7 +50,8 @@
         },
         "umpire_confirmed": {
           "type": "boolean",
-          "description": "Required. No default. False means the dismissal does not count."
+          "default": true,
+          "description": "Optional. Defaults to true for older mobile clients that omit the field."
         }
       }
     },

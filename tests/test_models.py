@@ -1,6 +1,3 @@
-import pytest
-from pydantic import ValidationError
-
 from cricket_protocol import BallEvent, ExtraType, WicketKind
 
 
@@ -35,10 +32,9 @@ def test_wide_is_extras_not_runs_off_bat() -> None:
     assert event.extras.runs == 1
 
 
-def test_umpire_confirmed_is_required() -> None:
-    payload = _ball(wicket={"kind": "lbw"})
-    with pytest.raises(ValidationError):
-        BallEvent.model_validate(payload)
+def test_omitted_confirmation_defaults_to_out_for_dismissals() -> None:
+    event = BallEvent.model_validate(_ball(wicket={"kind": "lbw"}))
+    assert event.wicket.umpire_confirmed is True
 
 
 def test_unconfirmed_lbw_is_still_a_valid_event() -> None:
@@ -48,8 +44,8 @@ def test_unconfirmed_lbw_is_still_a_valid_event() -> None:
     assert event.wicket.umpire_confirmed is False
 
 
-def test_confirmed_without_dismissal_is_invalid() -> None:
-    with pytest.raises(ValidationError):
-        BallEvent.model_validate(
-            _ball(wicket={"kind": "none", "umpire_confirmed": True})
-        )
+def test_confirmed_without_dismissal_is_ignored() -> None:
+    event = BallEvent.model_validate(
+        _ball(wicket={"kind": "none", "umpire_confirmed": True})
+    )
+    assert event.wicket.umpire_confirmed is False
