@@ -24,7 +24,7 @@
     "runs_off_bat": {
       "type": "integer",
       "minimum": 0,
-      "maximum": 6,
+      "maximum": 12,
       "description": "Off the bat only. Never includes extras."
     },
     "extras": {

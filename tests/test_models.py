@@ -27,11 +27,11 @@ def test_valid_dot_ball() -> None:
     assert event.wicket.kind is WicketKind.NONE
 
 
-def test_wide_is_extras_not_runs_off_bat() -> None:
+def test_wide_total_includes_extras() -> None:
     event = BallEvent.model_validate(
-        _ball(runs_off_bat=0, extras={"type": "wide", "runs": 1})
+        _ball(runs_off_bat=1, extras={"type": "wide", "runs": 1})
     )
-    assert event.runs_off_bat == 0
+    assert event.runs_off_bat == 1
     assert event.extras.runs == 1
 
 

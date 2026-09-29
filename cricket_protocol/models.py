@@ -59,10 +59,10 @@ class BallEvent(BaseModel):
     bowler: str
     runs_off_bat: int = Field(
         ge=0,
-        le=6,
+        le=12,
         description=(
-            "Runs scored off the bat on this delivery. MUST NOT include extras. "
-            "A wide is runs_off_bat=0 and extras.runs>=1."
+            "Total runs on this delivery, extras included. "
+            "extras.runs keeps the breakdown for wides and no-balls."
         ),
     )
     extras: Extras

@@ -5,7 +5,7 @@ Hop 2 (cricket-broadcast) must never import this package or read BallEvent field
 """
 
 PROTOCOL_INVARIANTS = (
-    "runs_off_bat is off the bat only and never includes extras.runs",
+    "runs_off_bat is the total for the delivery and includes extras.runs",
     "umpire_confirmed has no default; omitting it is invalid",
     "an unconfirmed dismissal is not a wicket — only scoring may decide that",
     "cricket-broadcast must consume ScoreSnapshot, never BallEvent",
