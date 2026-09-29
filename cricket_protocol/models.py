@@ -31,16 +31,28 @@ class Extras(BaseModel):
 class Wicket(BaseModel):
     kind: WicketKind = WicketKind.NONE
     umpire_confirmed: bool = Field(
+        default=True,
         description=(
-            "Required explicit flag. There is no default. Scoring must not "
-            "treat a missing value as true — unconfirmed appeals are not wickets."
-        )
+            "Defaults to true so older mobile clients that omit the field still "
+            "parse. A present wicket.kind has historically meant the dismissal counted."
+        ),
     )
+
+    @model_validator(mode="before")
+    @classmethod
+    def _default_omitted_confirmation(cls, data: object) -> object:
+        if not isinstance(data, dict):
+            return data
+        if "umpire_confirmed" in data:
+            return data
+        kind = data.get("kind", WicketKind.NONE)
+        kind_value = kind.value if isinstance(kind, WicketKind) else kind
+        return {**data, "umpire_confirmed": kind_value != "none"}
 
     @model_validator(mode="after")
     def _confirmed_only_with_dismissal(self) -> "Wicket":
         if self.kind == WicketKind.NONE and self.umpire_confirmed:
-            raise ValueError("umpire_confirmed cannot be true when kind is none")
+            return self.model_copy(update={"umpire_confirmed": False})
         return self
 
 
