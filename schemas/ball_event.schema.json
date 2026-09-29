@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BallEvent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "match_id",
+    "innings",
+    "over",
+    "ball_in_over",
+    "striker",
+    "bowler",
+    "runs_off_bat",
+    "extras",
+    "wicket"
+  ],
+  "properties": {
+    "match_id": { "type": "string" },
+    "innings": { "type": "integer", "minimum": 1 },
+    "over": { "type": "integer", "minimum": 0 },
+    "ball_in_over": { "type": "integer", "minimum": 1, "maximum": 9 },
+    "striker": { "type": "string" },
+    "bowler": { "type": "string" },
+    "runs_off_bat": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 6,
+      "description": "Off the bat only. Never includes extras."
+    },
+    "extras": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "runs"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["none", "wide", "no_ball", "bye", "leg_bye"]
+        },
+        "runs": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "wicket": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "umpire_confirmed"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["none", "bowled", "lbw", "caught", "run_out", "stumped"]
+        },
+        "umpire_confirmed": {
+          "type": "boolean",
+          "description": "Required. No default. False means the dismissal does not count."
+        }
+      }
+    },
+    "commentary": { "type": ["string", "null"] }
+  }
+}
